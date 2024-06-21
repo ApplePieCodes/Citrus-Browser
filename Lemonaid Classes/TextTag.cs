@@ -7,19 +7,19 @@ using System.Windows.Media;
 
 namespace Citrus_Browser.Lemoaid_Classes
 {
-    public class TextTag
+    public class TextTag //Represents Text
     {
-        public string text;
-        public string name;
-        public int fontSize;
-        public FontFamily fontFamily;
-        public SolidColorBrush foreground;
-        public SolidColorBrush background;
-        public Tools.HorizontalAlignment horizontalAlignment;
+        public string text; // Text to be displayed
+        public string? name; // Name to be referenced
+        public int fontSize; // font size
+        public FontFamily fontFamily; // Font family
+        public SolidColorBrush foreground; // Foreground Color
+        public SolidColorBrush background; // Background Color
+        public Tools.HorizontalAlignment horizontalAlignment; // Horizontal alignment
         public TextTag(string a, string b, int c, FontFamily d, SolidColorBrush e, SolidColorBrush f, Tools.HorizontalAlignment horizontalAlignment)
         {
             text = a;
-            name = b ?? string.Empty;
+            name = b;
             fontSize = c;
             fontFamily = d;
             foreground = e;

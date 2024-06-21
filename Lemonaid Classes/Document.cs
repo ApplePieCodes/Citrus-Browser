@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Citrus_Browser.Lemoaid_Classes
 {
-    public class Document
+    public class Document //OverArching Class for the Webpage. Has an Info Header and a Page.
     {
         public InfoHeader info;
         public Page content;

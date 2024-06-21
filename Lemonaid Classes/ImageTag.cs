@@ -8,25 +8,25 @@ using System.Windows.Media.Imaging;
 
 namespace Citrus_Browser.Lemonaid_Classes
 {
-    public class ImageTag
+    public class ImageTag //Represents an Image
     {
-        public string name;
-        public BitmapImage image;
-        public double opacity;
-        public double width;
-        public double height;
-        public Tools.HorizontalAlignment horizontalAlignment;
-        public double CornerRadius;
+        public string name; //Name to be referenced
+        public BitmapImage image; //Image
+        public double opacity; // Opacity
+        public double width; //Image Width
+        public double height; // Image Height
+        public Tools.HorizontalAlignment horizontalAlignment; // Horizontal Alignment
+        public double CornerRadius; // Corner Radius
 
-        public ImageTag(string nam, BitmapImage img, double opa, double wid, double hei, Tools.HorizontalAlignment horizontalAlignment, double radius)
+        public ImageTag(string nam, BitmapImage img, double opa, double wid, double hei, Tools.HorizontalAlignment hor, double rad)
         {
             name = nam;
             image = img;
             opacity = opa;
             width = wid;
             height = hei;
-            this.horizontalAlignment = horizontalAlignment;
-            CornerRadius = radius;
+            horizontalAlignment = hor;
+            CornerRadius = rad;
         }
     }
 }

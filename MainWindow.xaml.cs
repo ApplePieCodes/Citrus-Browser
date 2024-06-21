@@ -10,9 +10,6 @@ using Citrus_Browser.Lemonaid_Classes;
 
 namespace Citrus_Browser
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -20,51 +17,48 @@ namespace Citrus_Browser
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Async method to handle downloading the page.
-        /// </summary>
         private async void DownloadPage(object sender, RoutedEventArgs e)
         {
-            string url = urlBar.Text;
+            string url = urlBar.Text; //Get the url from the urlBar
 
-            if (string.IsNullOrWhiteSpace(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            if ((string.IsNullOrWhiteSpace(url) || !Uri.IsWellFormedUriString(url, UriKind.Absolute)) && url.EndsWith(".aid")) //Check if the string is a URL AND is a Lemonaid File
             {
                 MessageBox.Show("Please enter a valid URL.", "Invalid URL", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            goButton.IsEnabled = false;
+            goButton.IsEnabled = false; // Disable the Go Button While Page Loads
 
-            using HttpClient client = new HttpClient();
+            using HttpClient client = new HttpClient(); //Create an HTTP Client
             try
             {
-                HttpResponseMessage response = await client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
+                HttpResponseMessage response = await client.GetAsync(url); //Get Webpage Content
+                response.EnsureSuccessStatusCode(); //Make Sure Response is Success
 
-                string content = await response.Content.ReadAsStringAsync();
+                string content = await response.Content.ReadAsStringAsync(); // Get Content of response.
 
-                Document doc = Deserializer.Deserialize(content);
+                Document doc = Deserializer.Deserialize(content); //Convert Page To Tags
 
-                if (doc == null)
+                if (doc == null) //If deserialization Failed
                 {
                     throw new Exception("Failed to deserialize the content.");
                 }
 
-                DisplayDocumentContent(doc);
+                DisplayDocumentContent(doc); //Display Deserialized Content
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException ex) //If HTTP Error Occured
             {
                 MessageBox.Show($"HTTP error occurred: {ex.Message}", "HTTP Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) // If Request Timed Out
             {
                 MessageBox.Show("Request timed out. Please try again.", "Timeout Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            catch (Exception ex)
+            catch (Exception ex) // Unspecified Error
             {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            finally
+            finally //Re-Enable The Go Button
             {
                 goButton.IsEnabled = true;
             }
@@ -76,14 +70,14 @@ namespace Citrus_Browser
         /// <param name="doc">The document object containing content to display.</param>
         private void DisplayDocumentContent(Document doc)
         {
-            gridView.Children.Clear();
-            gridView.Background = doc.info.background;
+            gridView.Children.Clear(); //Clear The Page
+            gridView.Background = doc.info.background; // Set The Page Background
 
-            foreach (var item in doc.content.tags)
+            foreach (var item in doc.content.tags) //For Each Item in the tags object array
             {
-                if (item is TextTag textTag)
+                if (item is TextTag textTag) //if the tag is a TextTag
                 {
-                    HorizontalAlignment horizontalAlignment = textTag.horizontalAlignment switch
+                    HorizontalAlignment horizontalAlignment = textTag.horizontalAlignment switch // Set the Horizontal Alignment
                     {
                         Tools.HorizontalAlignment.Left => HorizontalAlignment.Left,
                         Tools.HorizontalAlignment.Center => HorizontalAlignment.Center,
@@ -91,42 +85,41 @@ namespace Citrus_Browser
                         _ => HorizontalAlignment.Left
                     };
 
-                    var textBlock = new TextBlock
+                    var textBlock = new TextBlock //Create a textBlock
                     {
-                        Text = textTag.text,
-                        Name = textTag.name,
-                        FontSize = textTag.fontSize,
-                        FontFamily = textTag.fontFamily,
-                        Foreground = textTag.foreground,
-                        Background = textTag.background,
-                        HorizontalAlignment = horizontalAlignment
+                        Text = textTag.text, //Set the text
+                        Name = textTag.name, //Set a name to be referenced
+                        FontSize = textTag.fontSize, // Set the font size
+                        FontFamily = textTag.fontFamily,//Set the font Family
+                        Foreground = textTag.foreground,// Set the foreground color
+                        Background = textTag.background,//Set the background color
+                        HorizontalAlignment = horizontalAlignment //Set the Horizontal Alignment
                     };
-                    gridView.Children.Add(textBlock);
+                    gridView.Children.Add(textBlock); // Add The TextBlock To the GridView
                 }
-                else if (item is ImageTag imageTag)
+                else if (item is ImageTag imageTag) //If the tag is an ImageTag
                 {
-                    HorizontalAlignment horizontalAlignment = imageTag.horizontalAlignment switch
+                    HorizontalAlignment horizontalAlignment = imageTag.horizontalAlignment switch //Set the horizontal alignment
                     {
                         Tools.HorizontalAlignment.Left => HorizontalAlignment.Left,
                         Tools.HorizontalAlignment.Center => HorizontalAlignment.Center,
                         Tools.HorizontalAlignment.Right => HorizontalAlignment.Right,
                         _ => HorizontalAlignment.Left
                     };
-                    ImageBrush imageBrush = new ImageBrush();
-                    imageBrush.ImageSource = imageTag.image;
-                    var rect = new Rectangle();
-                    var imageView = new Rectangle
+                    ImageBrush imageBrush = new ImageBrush(); //Create a temporary imagebrush
+                    imageBrush.ImageSource = imageTag.image; // Set the Image Source to the image
+                    var imageView = new Rectangle // Create a rectangle
                     {
-                        Name = imageTag.name,
-                        Fill = imageBrush,
-                        Opacity = imageTag.opacity,
-                        HorizontalAlignment = horizontalAlignment,
-                        Width = imageTag.width / 2,
-                        Height = imageTag.height / 2,
-                        RadiusX = imageTag.CornerRadius,
-                        RadiusY = imageTag.CornerRadius
+                        Name = imageTag.name, //Set a name to be referenced
+                        Fill = imageBrush, //Set the image
+                        Opacity = imageTag.opacity, //Set the opacity
+                        HorizontalAlignment = horizontalAlignment, // Set the horizontal alignment
+                        Width = imageTag.width / 2, // Set the width
+                        Height = imageTag.height / 2, // Set the height
+                        RadiusX = imageTag.CornerRadius, // Set the Corner Radius
+                        RadiusY = imageTag.CornerRadius // Ditto
                     };
-                    gridView.Children.Add(imageView);
+                    gridView.Children.Add(imageView); // Add the rectangle to the GridView
                 }
 
                 // Handle other tag types as needed
