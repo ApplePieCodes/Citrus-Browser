@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using Citrus_Browser.Lemoaid_Classes;
+using Citrus_Browser.Lemonaid_Classes;
 
 namespace Citrus_Browser
 {
@@ -100,6 +102,31 @@ namespace Citrus_Browser
                         HorizontalAlignment = horizontalAlignment
                     };
                     gridView.Children.Add(textBlock);
+                }
+                else if (item is ImageTag imageTag)
+                {
+                    HorizontalAlignment horizontalAlignment = imageTag.horizontalAlignment switch
+                    {
+                        Tools.HorizontalAlignment.Left => HorizontalAlignment.Left,
+                        Tools.HorizontalAlignment.Center => HorizontalAlignment.Center,
+                        Tools.HorizontalAlignment.Right => HorizontalAlignment.Right,
+                        _ => HorizontalAlignment.Left
+                    };
+                    ImageBrush imageBrush = new ImageBrush();
+                    imageBrush.ImageSource = imageTag.image;
+                    var rect = new Rectangle();
+                    var imageView = new Rectangle
+                    {
+                        Name = imageTag.name,
+                        Fill = imageBrush,
+                        Opacity = imageTag.opacity,
+                        HorizontalAlignment = horizontalAlignment,
+                        Width = imageTag.width / 2,
+                        Height = imageTag.height / 2,
+                        RadiusX = imageTag.CornerRadius,
+                        RadiusY = imageTag.CornerRadius
+                    };
+                    gridView.Children.Add(imageView);
                 }
 
                 // Handle other tag types as needed

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.IO;
 using System.Reflection;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Citrus_Browser
 {
@@ -21,6 +25,19 @@ namespace Citrus_Browser
             Left,
             Center,
             Right,
+        }
+        public static BitmapImage byteArrayToImage(byte[] bytes)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+
+            using (MemoryStream stream = new MemoryStream(bytes))
+            {
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.StreamSource = stream;
+                bitmapImage.EndInit();
+            }
+            return bitmapImage;
         }
     }
 }

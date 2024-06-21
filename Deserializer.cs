@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Citrus_Browser.Lemonaid_Classes;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Security.Policy;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 
 namespace Citrus_Browser.Lemoaid_Classes
@@ -70,7 +74,9 @@ namespace Citrus_Browser.Lemoaid_Classes
                         case "text":
                             page.tags.Add(ProcessTextTag(element));
                             break;
-                        // Add cases for other tag types as needed
+                        case "image":
+                            page.tags.Add(ProcessImageTag(element));
+                            break;
                         default:
                             Console.WriteLine($"Unknown tag type: {element.Name.LocalName}");
                             break;
@@ -84,6 +90,49 @@ namespace Citrus_Browser.Lemoaid_Classes
 
             return page;
         }
+
+        private static ImageTag ProcessImageTag(XElement element)
+        {
+            string name = element.Attribute("name")?.Value;
+            using var client = new HttpClient();
+            HttpResponseMessage response = client.GetAsync(element.Value).Result;
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"HTTP request failed with status code {response.StatusCode}");
+            }
+
+            byte[] content = response.Content.ReadAsByteArrayAsync().Result;
+            BitmapImage image = Tools.byteArrayToImage(content);
+            double opacity;
+            if (!double.TryParse(element.Attribute("opacity")?.Value, out opacity))
+            {
+                opacity = 1.0; // Default value if parsing fails
+            }
+            double width;
+            if (!double.TryParse(element.Attribute("width")?.Value, out width))
+            {
+                width = image.PixelWidth; // Default value if parsing fails
+            }
+            double height;
+            if (!double.TryParse(element.Attribute("height")?.Value, out height))
+            {
+                height = image.PixelHeight;
+            }
+            Tools.HorizontalAlignment alignment = element.Attribute("horizontalalignment")?.Value.ToLower() switch
+            {
+                "left" => Tools.HorizontalAlignment.Left,
+                "center" => Tools.HorizontalAlignment.Center,
+                "right" => Tools.HorizontalAlignment.Right,
+                _ => Tools.HorizontalAlignment.Left
+            };
+            double radius;
+            if (!double.TryParse(element.Attribute("radius")?.Value, out radius))
+            {
+                radius = 0;
+            }
+            return new ImageTag(name, image, opacity, width, height, alignment, radius);
+        }
+
 
         /// <summary>
         /// Process a text tag element.
