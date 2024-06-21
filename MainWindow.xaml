@@ -6,20 +6,20 @@
         xmlns:local="clr-namespace:Citrus_Browser"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Background="Black">
+    <Grid Background="#101824">
         <Grid.RowDefinitions>
             <RowDefinition Height="43*"/>
             <RowDefinition Height="391*"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Cirtus Browser v0.1" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="White" FontSize="20" Margin="5,0,0,0"/>
-        <TextBox x:Name="urlBar" Grid.Row="0" Width="450" Height="30" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="180,0,0,0" Padding="5">
+        <TextBox x:Name="urlBar" Grid.Row="0" Width="450" Height="30" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="180,0,0,0" Padding="5" Background="#101824" BorderBrush="#000000" Foreground="#ffffff">
             <TextBox.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="12"/>
                 </Style>
             </TextBox.Resources>
         </TextBox>
-        <Button Content="Go" HorizontalAlignment="Left" Margin="630,0,0,0" VerticalAlignment="Center" Height="30" Width="36" FontSize="20" Click="DownloadPage" x:Name="goButton">
+        <Button Content="Go" HorizontalAlignment="Left" Margin="630,0,0,0" VerticalAlignment="Center" Height="30" Width="36" FontSize="20" Click="DownloadPage" x:Name="goButton" Background="#101824" BorderBrush="#000000" Foreground="#ffff">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="8"/>
